@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Music, Mic2, Sparkles, Copy, ExternalLink, RefreshCw, Heart, Share2, PlayCircle, Youtube, Video, Wand2, BookOpen, X, ChevronDown, CheckCircle2, Zap, Globe2, User, Smile, Radio, Disc, Layers, Clock, Lightbulb } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Music, Mic2, Sparkles, Copy, ExternalLink, RefreshCw, Heart, BookOpen, X, CheckCircle2, Zap, Globe2, User, Smile, Radio, Disc, Layers, Clock, Lightbulb } from 'lucide-react';
 
 const VibeFlow = () => {
   // --- STATE MANAGEMENT ---
@@ -165,7 +165,11 @@ const VibeFlow = () => {
     }, 1500);
 
     try {
-      const apiKey = ""; // SYSTEM NOTE: Will use Environment Variable in Production
+      const apiKey = ""; // API Key disetting di environment variable saat di Vercel
+      
+      // Validasi sederhana agar tidak crash jika key kosong di Vercel (sebelum env diset)
+      // if (!apiKey) throw new Error("API Key belum disetting. Cek .env file anda.");
+
       const systemPrompt = "Kamu adalah produser musik senior dan penulis lirik hits.";
       
       const selectedVocal = vocalType === 'Auto Detect' ? 'Sesuaikan dengan vibe lagu' : vocalType;
@@ -212,11 +216,13 @@ const VibeFlow = () => {
         setSongTitle(result.title);
         setStylePrompt(result.stylePrompt);
         setLyrics(result.lyrics);
+      } else {
+        throw new Error("Gagal mendapatkan respons dari AI.");
       }
 
     } catch (error) {
       console.error("Error:", error);
-      setLyrics("Gagal meracik lagu. Pastikan API Key terisi atau coba lagi!");
+      setLyrics("Maaf, terjadi kesalahan. Pastikan koneksi internet lancar atau API Key sudah benar.");
     } finally {
       clearInterval(interval);
       setLoading(false);
@@ -256,22 +262,8 @@ const VibeFlow = () => {
 
       <div className="relative z-10 max-w-5xl mx-auto px-4 py-8">
         
-        {/* Header */}
+        {/* Header (Clean Version) */}
         <header className="text-center mb-10 relative">
-           <div className="md:absolute md:right-0 md:top-2 flex justify-center md:justify-end mb-4 md:mb-0">
-            <button 
-              onClick={() => setShowGuide(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-slate-800/80 hover:bg-slate-700 rounded-full border border-slate-700 text-sm font-bold text-slate-300 transition-all hover:scale-105 shadow-lg group"
-            >
-              <BookOpen className="w-4 h-4 text-purple-400 group-hover:text-purple-300" />
-              Panduan
-            </button>
-          </div>
-
-          <div className="inline-flex items-center justify-center p-2 bg-slate-900/50 backdrop-blur-sm rounded-full border border-slate-800 mb-4 px-4">
-            <Sparkles className="w-4 h-4 text-yellow-400 mr-2" />
-            <span className="text-xs font-bold text-slate-300 tracking-wider">V.5.1 USER FRIENDLY</span>
-          </div>
           <h1 className="text-6xl md:text-8xl font-black tracking-tighter bg-gradient-to-r from-purple-400 via-pink-500 to-cyan-400 text-transparent bg-clip-text drop-shadow-sm pb-2">
             V.I.R.A.L.
           </h1>
